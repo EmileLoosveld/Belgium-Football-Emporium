@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Items</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        #search-results {
+            margin-top: 20px;
+        }
+
+        #search-results li {
+            list-style: none;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Search Items</h1>
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" id="search-input" placeholder="Search by ID">
+            <div class="input-group-append">
+                <button class="btn btn-primary" type="button" id="search-button">Search</button>
+            </div>
+        </div>
+        <div id="search-results">
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('search-button').addEventListener('click', function () {
+                var searchTerm = document.getElementById('search-input').value;
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', '/search?id=' + searchTerm, true);
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        if (xhr.status === 200) {
+                            var data = JSON.parse(xhr.responseText);
+                            displaySearchResults(data);
+                        } else {
+                            console.error('Error:', xhr.status);
+                        }
+                    }
+                };
+                xhr.send();
+            });
+        });
+
+        function displaySearchResults(results) {
+            var resultsContainer = document.getElementById('search-results');
+            resultsContainer.innerHTML = ''; // Vorige zoekresultaten wissen
+            if (results.length > 0) {
+                results.forEach(function (result) {
+                    var listItem = document.createElement('li');
+                    listItem.textContent = 'Item ID: ' + result.id;
+                    resultsContainer.appendChild(listItem);
+                });
+            } else {
+                resultsContainer.innerHTML = '<p>No items found.</p>';
+            }
+        }
+    </script>
+
+</body>
+
+</html>
