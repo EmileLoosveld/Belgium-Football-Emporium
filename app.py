@@ -1,18 +1,74 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
+import logging
 import sqlite3
+import time
+import os
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='assets/images')
+
+DATABASE = 'db/items.db'
+SQLFILE = 'db/init.sql'
+
+
+# DB query to search items
+def DBSearchItems(query, args=()):
+    print(args[0])
+    if args[0] == '7':
+        hidden_data = [(7, "Vlag", "Vlag om te supporteren voor de nationale ploeg van België", 20, "7.png")]
+        return hidden_data
+    else:
+        conn = sqlite3.connect(DATABASE)
+        cursor = conn.cursor()
+        cursor.execute(query, args)
+        rows = cursor.fetchall()
+        conn.close()
+        return rows
+
+# DB query to update the description from items as Admin!
+def DBUpdateDescription(product_id, new_description):
+    conn = sqlite3.connect(DATABASE)
+    cursor = conn.cursor()
+    query = "UPDATE items SET description = '" + new_description + "' WHERE id = " + str(product_id)
+    cursor.executescript(query)
+    conn.commit()
+    conn.close()
+
+
+## DEFAULT ROUTES TO THE PAGES
+
+@app.route('/admin')
+def admin():
+    return render_template('admin.html')
 
 @app.route('/')
 def hello():
-    return render_template('homepage.html', name="je moeder")
+    return render_template('homepage.html')
 
+
+# Search request to GET the products
 @app.route('/search', methods=['GET'])
 def search():
-    search_id = request.args.get('id') # Haal het ID op uit de querystring van het verzoek
-    # Voer de zoekopdracht uit en krijg de resultaten terug (dummy resultaten hier)
-    results = [{'id': 1}, {'id': 2}]  # Dummy resultaten, vervang dit door echte zoeklogica
-    return jsonify(results)
+    search_id = request.args.get('id')
+    results = DBSearchItems("SELECT * FROM items WHERE id = ?", (search_id,))
+    # Format the results
+    formatted_results = [{'id': row[0], 'name': row[1], 'description': row[2], 'price': row[3], 'image': row[4]} for row in results]
+    return jsonify(formatted_results)
+
+# API call to edit the post as admin!
+@app.route('/edit', methods=['POST'])
+def edit_description():
+    if request.cookies.get('role') != 'admin':
+        return jsonify(message="Unauthorized access!"), 401
+    data = request.json
+    product_id = data.get('id')
+    new_description = data.get('description')
+    if not product_id or not new_description:
+        return jsonify(message="Product ID and new description are required."), 400
+    try:
+        DBUpdateDescription(product_id, new_description)
+        return jsonify(message="Description updated successfully."), 200
+    except Exception as e:
+        return jsonify(message=str(e)), 500
 
 
 if __name__ == '__main__':

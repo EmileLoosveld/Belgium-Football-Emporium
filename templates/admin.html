@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Product Description</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {
+            margin-top: 5vh;
+        }
+
+        .admin-only {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Edit Product Description</h1>
+        <div id="message"></div>
+        <div class="form-group admin-only" id="admin-section">
+            <label for="product-id">Product ID:</label>
+            <input type="text" class="form-control" id="product-id" placeholder="Enter Product ID">
+        </div>
+        <div class="form-group admin-only" id="description-section">
+            <label for="description">New Description:</label>
+            <textarea class="form-control" id="description" rows="3" placeholder="Enter New Description"></textarea>
+        </div>
+        <button class="btn btn-primary admin-only" id="edit-button">Edit Description</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var message = document.getElementById('message');
+            var isAdmin = document.cookie.split(';').some(function (cookie) {
+                return cookie.trim().startsWith('role=admin');
+            });
+            if (!isAdmin) {
+                message.innerHTML = '<div class="alert alert-danger" role="alert">You are not an admin!</div>';
+            } else {
+                // If user is admin, show the input fields and button
+                document.getElementById('admin-section').classList.remove('admin-only');
+                document.getElementById('description-section').classList.remove('admin-only');
+                document.getElementById('edit-button').classList.remove('admin-only');
+            }
+
+            document.getElementById('edit-button').addEventListener('click', function () {
+                var productId = document.getElementById('product-id').value;
+                var newDescription = document.getElementById('description').value;
+                if (!productId || !newDescription) {
+                    alert('Please enter both product ID and new description.');
+                    return;
+                }
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/edit', true);
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        if (xhr.status === 200) {
+                            alert('Description updated successfully.');
+                        } else {
+                            alert('Error updating description: ' + xhr.responseText);
+                        }
+                    }
+                };
+                xhr.send(JSON.stringify({
+                    id: productId,
+                    description: newDescription
+                }));
+            });
+        });
+    </script>
+
+</body>
+
+</html>

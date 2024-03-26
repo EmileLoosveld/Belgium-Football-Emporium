@@ -7,6 +7,10 @@
     <title>Search Items</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        .container {
+            margin-top: 5vh;
+        }
+
         #search-results {
             margin-top: 20px;
         }
@@ -16,6 +20,34 @@
             border: 1px solid #ccc;
             padding: 10px;
             margin-bottom: 5px;
+        }
+
+        .card {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            overflow: hidden;
+
+            margin: auto;
+            /* Center the card */
+            position: relative;
+            /* Position relative for absolute positioning of image */
+        }
+
+        .item-image {
+            max-width: 100px;
+            /* Adjust max-width as needed */
+            position: absolute;
+            /* Position absolutely */
+            top: 10px;
+            /* Position at the top */
+            right: 10px;
+            /* Position at the right */
+        }
+
+        .item-details {
+            margin-right: 120px;
+            /* Adjust margin-right to make space for the image */
         }
     </style>
 </head>
@@ -56,12 +88,42 @@
 
         function displaySearchResults(results) {
             var resultsContainer = document.getElementById('search-results');
-            resultsContainer.innerHTML = ''; // Vorige zoekresultaten wissen
+            resultsContainer.innerHTML = ''; // Clear previous search results
             if (results.length > 0) {
                 results.forEach(function (result) {
-                    var listItem = document.createElement('li');
-                    listItem.textContent = 'Item ID: ' + result.id;
-                    resultsContainer.appendChild(listItem);
+                    // Create a card div for each item
+                    var card = document.createElement('div');
+                    card.classList.add('card');
+
+                    // Create image element
+                    var image = document.createElement('img');
+                    image.src = 'images/' + result.image; // Concatenate path with filename
+                    image.alt = 'Item Image';
+                    image.classList.add('item-image'); // Add a class for styling
+
+                    // Create a div to hold item details
+                    var details = document.createElement('div');
+                    details.classList.add('item-details');
+
+                    // Create heading for item name
+                    var nameHeading = document.createElement('h3');
+                    nameHeading.textContent = result.name;
+                    // Create paragraph for item description
+                    var descriptionPara = document.createElement('p');
+                    descriptionPara.textContent = result.description;
+                    // Create paragraph for item price
+                    var pricePara = document.createElement('p');
+                    pricePara.textContent = 'Price: €' + result.price;
+
+                    // Append image and details to the card
+                    details.appendChild(nameHeading);
+                    details.appendChild(descriptionPara);
+                    details.appendChild(pricePara);
+                    card.appendChild(image);
+                    card.appendChild(details);
+
+                    // Append card to results container
+                    resultsContainer.appendChild(card);
                 });
             } else {
                 resultsContainer.innerHTML = '<p>No items found.</p>';
