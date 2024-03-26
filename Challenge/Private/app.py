@@ -9,6 +9,8 @@ app.secret_key = os.urandom(24)
 
 SQLFILE = 'db/init.sql'
 
+
+## Create table per user
 def init_user_db():
     user_db_file = f"user_{session['id']}.db"
     if not os.path.exists(user_db_file):
@@ -21,7 +23,8 @@ def init_user_db():
 # DB query to search items
 def DBSearchItems(query, args=()):
     print(args[0])
-    if args[0] == '7':
+    if args[0].strip() == '7':
+        # Do not show this item
         hidden_data = [(7, "Vlag", "Vlag om te supporteren voor de nationale ploeg van België", 20, "7.png")]
         return hidden_data
     else:
@@ -36,6 +39,8 @@ def DBSearchItems(query, args=()):
 def DBUpdateDescription(product_id, new_description):
     conn = sqlite3.connect(f"user_{session['id']}.db")
     cursor = conn.cursor()
+
+    # TODO check if this is safe!
     query = "UPDATE items SET description = '" + new_description + "' WHERE id = " + str(product_id)
     cursor.executescript(query)
     conn.commit()
@@ -73,8 +78,12 @@ def search():
 # API call to edit the post as admin!
 @app.route('/edit', methods=['POST'])
 def edit_description():
+
+    # Check if user is admin
     if request.cookies.get('role') != 'admin':
         return jsonify(message="Unauthorized access!"), 401
+
+
     data = request.json
     product_id = data.get('id')
     new_description = data.get('description')

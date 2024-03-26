@@ -6,9 +6,15 @@ Web
 ## Estimated Difficulty
 Hard (3?)
 
+## Description
+Om deze challenge op te lossen zal er gebruik moeten gemaakt worden van sql injection. Als admin wordt daar niet op gechecked waardoor dit in die inputs uitgevoerd kan worden. Echter returnt deze api call niets waardoor het uitlezen nog moet gebeuren op de homepage. Om admin perms te krijgen kan je zelf de cookie instellen
+De source code in Public moet vrij toegangklijk zijn om inzicht te geven in de server side werking, enkel de flag is verschillend tussen private en public
 
 ## Scenario
-De belgische voetbalbond heeft een bedrijf ingeschakeld om een demo te maken voor een webshop waar mensen merchendise kunnen kopen naar aanleiding van het EK. Een van de vereisen is dat je als beheerder de mogelijkheid moet hebben om de beschrijving van producten aan te kunnen passen. Het tweede is dat niet alle data zomaar zichtbaar mag zijn in de catalogus. PAS OP DAT JE DE VERBORGEN DATA NIET VERWIJDERD!
+De belgische voetbalbond heeft een bedrijf ingeschakeld om een demo te maken voor een webshop waar mensen merchendise kunnen kopen naar aanleiding van het EK.
+
+Er gaan geruchten rond dat dit bedrijf de security nog niet helemaal op orde heeft: de source code is gelekt.
+Weet jij ook de andere security fouten te vinden?
 
 ## Write-up
 Wanneer je de website bekijkt is het mogelijk om op basis van id's producten op te vragen. Dit returnt data van het product uit de database
