@@ -27,7 +27,7 @@ def DBSearchItems(query, args=()):
     else:
         conn = sqlite3.connect(f"user_{session['id']}.db")
         cursor = conn.cursor()
-        cursor.executescript(query, args)
+        cursor.execute(query, args)
         rows = cursor.fetchall()
         conn.close()
         return rows
@@ -37,7 +37,7 @@ def DBUpdateDescription(product_id, new_description):
     conn = sqlite3.connect(f"user_{session['id']}.db")
     cursor = conn.cursor()
     query = "UPDATE items SET description = '" + new_description + "' WHERE id = " + str(product_id)
-    cursor.execute(query)
+    cursor.executescript(query)
     conn.commit()
     conn.close()
 
