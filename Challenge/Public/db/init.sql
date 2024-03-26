@@ -13,7 +13,7 @@ INSERT INTO items (name, description, price, image) VALUES
     ('Voetbal', 'Voetbal in de kleuren van de nationale ploeg van België', 20, '4.png'),
     ('Sjaal', 'Sjaal in de kleuren van de nationale ploeg van België', 15, '5.png'),
     ('Pet', 'Pet met het logo van de nationale ploeg van België', 10, '6.png'),
-    ('Vlag', 'Vlag om te supporteren voor de nationale ploeg van België', 20, '7.png'),
+    ('EL{W3LLD0N3}', 'Vlag om te supporteren voor de nationale ploeg van België', 20, '7.png'),
     ('T-shirt', 'T-shirt met het logo van de nationale ploeg van België', 25, '8.png'),
     ('Sokken', 'Sokken in de kleuren van de nationale ploeg van België', 10, '9.png'),
     ('Rugzak', 'Rugzak met het logo van de nationale ploeg van België', 30, '10.png');

@@ -1,14 +1,22 @@
-from flask import Flask, render_template, request, jsonify
-import logging
+from flask import Flask, render_template, request, jsonify, session
 import sqlite3
-import time
 import os
+import uuid
 
 app = Flask(__name__, static_folder='assets/images')
+app.secret_key = os.urandom(24)
 
-DATABASE = 'db/items.db'
+
 SQLFILE = 'db/init.sql'
 
+def init_user_db():
+    user_db_file = f"user_{session['id']}.db"
+    if not os.path.exists(user_db_file):
+        conn = sqlite3.connect(user_db_file)
+        with app.open_resource(SQLFILE, mode='r') as f:
+            conn.cursor().executescript(f.read())
+        conn.commit()
+        conn.close()
 
 # DB query to search items
 def DBSearchItems(query, args=()):
@@ -17,7 +25,7 @@ def DBSearchItems(query, args=()):
         hidden_data = [(7, "Vlag", "Vlag om te supporteren voor de nationale ploeg van België", 20, "7.png")]
         return hidden_data
     else:
-        conn = sqlite3.connect(DATABASE)
+        conn = sqlite3.connect(f"user_{session['id']}.db")
         cursor = conn.cursor()
         cursor.execute(query, args)
         rows = cursor.fetchall()
@@ -26,10 +34,10 @@ def DBSearchItems(query, args=()):
 
 # DB query to update the description from items as Admin!
 def DBUpdateDescription(product_id, new_description):
-    conn = sqlite3.connect(DATABASE)
+    conn = sqlite3.connect(f"user_{session['id']}.db")
     cursor = conn.cursor()
     query = "UPDATE items SET description = '" + new_description + "' WHERE id = " + str(product_id)
-    cursor.executescript(query)
+    cursor.execute(query)
     conn.commit()
     conn.close()
 
@@ -38,10 +46,18 @@ def DBUpdateDescription(product_id, new_description):
 
 @app.route('/admin')
 def admin():
+    if 'id' not in session:
+        session['id'] = str(uuid.uuid4())
+        init_user_db()  # Initialize the user's database
+
     return render_template('admin.html')
 
 @app.route('/')
-def hello():
+def homepage():
+    if 'id' not in session:
+        session['id'] = str(uuid.uuid4())
+        init_user_db()  # Initialize the user's database
+
     return render_template('homepage.html')
 
 
