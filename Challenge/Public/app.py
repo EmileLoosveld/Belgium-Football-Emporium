@@ -27,7 +27,7 @@ def DBSearchItems(query, args=()):
     else:
         conn = sqlite3.connect(f"user_{session['id']}.db")
         cursor = conn.cursor()
-        cursor.execute(query, args)
+        cursor.executescript(query, args)
         rows = cursor.fetchall()
         conn.close()
         return rows
