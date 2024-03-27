@@ -21,12 +21,14 @@ def init_user_db():
         conn.close()
 
 # DB query to search items
-def DBSearchItems(query, args=()):
+def SafeQuery(query, args=()):
     print(args[0])
-    if args[0].strip() == '7':
+
+    if '7' in args[0]:
         # Do not show this item
-        hidden_data = [(7, "Vlag", "Vlag om te supporteren voor de nationale ploeg van België", 20, "7.png")]
+        hidden_data = [(7, "Vlag", "You are not allowed to vieuw this item", 20, "7.png")]
         return hidden_data
+
     else:
         conn = sqlite3.connect(f"user_{session['id']}.db")
         cursor = conn.cursor()
@@ -36,7 +38,7 @@ def DBSearchItems(query, args=()):
         return rows
 
 # DB query to update the description from items as Admin!
-def DBUpdateDescription(product_id, new_description):
+def UnsafeQuery(product_id, new_description):
     conn = sqlite3.connect(f"user_{session['id']}.db")
     cursor = conn.cursor()
 
@@ -70,7 +72,7 @@ def homepage():
 @app.route('/search', methods=['GET'])
 def search():
     search_id = request.args.get('id')
-    results = DBSearchItems("SELECT * FROM items WHERE id = ?", (search_id,))
+    results = SafeQuery("SELECT * FROM items WHERE id = ?", (search_id,))
     # Format the results
     formatted_results = [{'id': row[0], 'name': row[1], 'description': row[2], 'price': row[3], 'image': row[4]} for row in results]
     return jsonify(formatted_results)
@@ -90,7 +92,7 @@ def edit_description():
     if not product_id or not new_description:
         return jsonify(message="Product ID and new description are required."), 400
     try:
-        DBUpdateDescription(product_id, new_description)
+        UnsafeQuery(product_id, new_description)
         return jsonify(message="Description updated successfully."), 200
     except Exception as e:
         return jsonify(message=str(e)), 500

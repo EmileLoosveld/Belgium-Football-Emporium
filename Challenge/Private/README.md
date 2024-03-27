@@ -45,3 +45,6 @@ Als we nu terug gaan naar de homepage en de laatste record opvragen (11) dan kri
 ## Flag
 
 dsctf{S3cur1ty_sa1d_1t_wa$_0k!}
+
+## Creator
+Emile Loosveld
