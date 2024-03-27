@@ -49,6 +49,9 @@ Door gebruik te maken van flask heb ik een webapplicatie opgezet die gebruik maa
 10.129.23.246:5000
 (Vergeet de vpn niet!)
 
+Problemen met de server?
+contacteer 'pietjepeksf' op discord
+
 ## Flag
 
 dsctf{S3cur1ty_sa1d_1t_wa$_0k!}
