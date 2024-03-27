@@ -26,7 +26,7 @@ def SafeQuery(query, args=()):
 
     if '7' in args[0]:
         # Do not show this item
-        hidden_data = [(7, "Vlag", "You are not allowed to vieuw this item", 20, "7.png")]
+        hidden_data = [(7, "Vlag", "You are not allowed to view this item", 20, "7.png")]
         return hidden_data
 
     else:
@@ -99,4 +99,4 @@ def edit_description():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    app.run(host='0.0.0.0')

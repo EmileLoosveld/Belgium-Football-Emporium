@@ -4,7 +4,7 @@
 Web
 
 ## Estimated Difficulty
-Hard (3?)
+Hard (4)
 
 ## Description
 Om deze challenge op te lossen zal er gebruik moeten gemaakt worden van sql injection. Als admin wordt daar niet op gechecked waardoor dit in die inputs uitgevoerd kan worden. Echter returnt deze api call niets waardoor het uitlezen nog moet gebeuren op de homepage. Om admin perms te krijgen kan je zelf de cookie instellen
@@ -41,6 +41,13 @@ sql injection command
 ![alt text](images/Screenshot_5.png)
 Als we nu terug gaan naar de homepage en de laatste record opvragen (11) dan krijgen we de juiste flag die uit de database komt!
 ![alt text](images/Screenshot_6.png)
+
+## Hoe gemaakt?
+Door gebruik te maken van flask heb ik een webapplicatie opgezet die gebruik maakt van bootstrap voor de layout.
+
+## Connection
+10.129.23.246:5000
+(Vergeet de vpn niet!)
 
 ## Flag
 
